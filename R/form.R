@@ -27,7 +27,16 @@ volume <- function(d, h, species = "Fagus sylvatica") {
 
   species_list <- c(fagus_sylvatica = "Fagus sylvatica",
                     picea_abies = "Picea abies",
-                    pinus_sylvestris = "Pinus sylvestris")
+                    pinus_sylvestris = "Pinus sylvestris",
+                    abies_alba = "Abies alba",
+                    larix_decidua = "Larix decidua",
+                    pseudotsuga_menziesii = "Pseudotsuga menziesii",
+                    quercus_robur = "Quercus_robur",
+                    alnus_glutinosa = "Alnus glutinosa",
+                    fraxinus_excelsior = "Fraxinus excelsior",
+                    pinus_cembra = "Pinus cembra",
+                    nonexplicit_broadleaved = "Sonst. LH",
+                    nonexplicit_conifer = "Sonst. NH")
   
   if (!any(species_list == species)) {
     stop("unknown species")
@@ -66,40 +75,62 @@ volume <- function(d, h, species = "Fagus sylvatica") {
       ,k32 = 0.29989
       ,k33 = -0.0444931
     )
-    ,fraxinus_excelsior = c(
-      k11  = -2.7284
-      ,k12 = 0.837563
-      ,k13 = -0.105343
-      ,k21 =  1.62283
-      ,k22 = -0.214812
-      ,k23 =  0.0289272
-      ,k31 = -0.0879719
-      ,k32 = 0.0325667
-      ,k33 = -0.00446295
+    ,abies_alba = c(
+      k11  = -7.41365
+      ,k12 = 3.33667
+      ,k13 = -0.426419
+      ,k21 = 4.00998 
+      ,k22 = -1.39533
+      ,k23 = 0.165198
+      ,k31 = -0.321612
+      ,k32 = 0.14401
+      ,k33 = -0.0165461
     )
-    ,pinus_cembra = c(
-      k11  = -5.80915
-      ,k12 = 3.387
-      ,k13 = -0.494392
-      ,k21 = 3.67116
-      ,k22 = -1.83211
-      ,k23 =  0.273999
-      ,k31 = -0.459282
-      ,k32 = 0.29989
-      ,k33 = -0.0444931
+    ,larix_decidua = c(
+      k11  = -9.26182 
+      ,k12 = 4.75438
+      ,k13 = -0.672495
+      ,k21 = 5.17159 
+      ,k22 = -2.27654 
+      ,k23 = 0.311633
+      ,k31 = -0.555379
+      ,k32 = 0.302799 
+      ,k33 = -0.041251
     )
-    ,nonexplicit_broadleaved = c(
-      k11  = -6.10993
-      ,k12 = 3.40736
-      ,k13 = -0.528642
-      ,k21 = 1.89417
-      ,k22 = -0.725279
-      ,k23 = 0.129421
-      ,k31 = 0.100078
-      ,k32 = -0.00869222
-      ,k33 = -0.00449328
+    , pseudotsuga_menziesii = c(
+      k11  = -12.5017
+      ,k12 = 6.62441 
+      ,k13 = -0.911185
+      ,k21 = 7.27277 
+      ,k22 = -3.58346 
+      ,k23 = 0.489149
+      ,k31 = -0.87715
+      ,k32 = 0.515586
+      ,k33 = -0.0714395
     )
+  ,quercus_robur = c(
+    k11  = -3.06118
+    ,k12 = 1.45506
+    ,k13 = -0.19992 
+    ,k21 = 1.93898
+    ,k22 = 0.112653
+    ,k23 = -0.165102
+    ,k31 =  0.120127
+    ,k32 =-0.0202543
+    ,k33 =-0.639727   
     )
+  ,alnus_glutinosa = c(
+    k11  =  -5.98031
+      ,k12 = 2.85905 
+      ,k13 =  -0.3374
+      ,k21 = 3.78395 
+      ,k22 = 0.133661
+      ,k23 =- 0.540955
+      ,k31 =0.296957
+      ,k32 = -0.0385165 
+      ,k33 =-1.47316 
+    )
+  
   cl2 <- species_coefs[[names(species_list)[which(species_list == species)]]]
 
   cl1f <- function(d) {
