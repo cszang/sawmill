@@ -26,4 +26,3 @@ and classifies each diameter into a group.
 d <- rnorm(40, mean = 50, sd = 3)
 diam_group(d)
 }
-

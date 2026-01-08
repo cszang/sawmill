@@ -31,15 +31,16 @@ volume <- function(d, h, species = "Fagus sylvatica") {
                     abies_alba = "Abies alba",
                     larix_decidua = "Larix decidua",
                     pseudotsuga_menziesii = "Pseudotsuga menziesii",
-                    quercus_robur = "Quercus_robur",
+                    quercus_robur = "Quercus robur/petraea",
                     alnus_glutinosa = "Alnus glutinosa",
                     fraxinus_excelsior = "Fraxinus excelsior",
                     pinus_cembra = "Pinus cembra",
                     nonexplicit_broadleaved = "Sonst. LH",
                     nonexplicit_conifer = "Sonst. NH")
   
-  if (!any(species_list == species)) {
-    stop("unknown species")
+  if (!all(species %in% species_list)) {
+    stop("unknown species: ", 
+         paste(unique(species[!species %in% species_list]), collapse = ", "))
   }
   
   species_coefs <- list(
@@ -113,22 +114,33 @@ volume <- function(d, h, species = "Fagus sylvatica") {
       ,k12 =  1.45506
       ,k13 = -0.19992 
       ,k21 =  1.93898
-      ,k22 =  0.112653
-      ,k23 = -0.165102
-      ,k31 =  0.120127
-      ,k32 = -0.0202543
-      ,k33 = -0.639727   
+      ,k22 = -0.639727
+      ,k23 =  0.112653
+      ,k31 = -0.165102
+      ,k32 =  0.120127
+      ,k33 = -0.0202543
     )
     ,alnus_glutinosa = c(
       k11  = -5.98031
       ,k12 =  2.85905 
       ,k13 = -0.3374
       ,k21 =  3.78395 
-      ,k22 =  0.133661
-      ,k23 = -0.540955
-      ,k31 =  0.296957
-      ,k32 = -0.0385165 
-      ,k33 = -1.47316 
+      ,k22 = -1.47316 
+      ,k23 =  0.133661
+      ,k31 = -0.540955
+      ,k32 =  0.296957
+      ,k33 = -0.0385165 
+    )
+    ,fraxinus_excelsior = c(
+      k11  = -2.7284
+      ,k12 =  0.837563  
+      ,k13 = -0.105343
+      ,k21 =  1.62283
+      ,k22 = -0.214812
+      ,k23 =  0.0289272  
+      ,k31 = -0.0879719
+      ,k32 =  0.0325667
+      ,k33 = -0.00446295
     )
     ,nonexplicit_broadleaved = c(
       k11  = -6.10993
@@ -153,23 +165,19 @@ volume <- function(d, h, species = "Fagus sylvatica") {
       ,k33 =  0.0046)
     )
   
-  cl2 <- species_coefs[[names(species_list)[which(species_list == species)]]]
+  species_keys <- names(species_list)[match(species, species_list)]
+  coef_matrix <- t(sapply(species_keys, function(key) species_coefs[[key]]))
   
-  cl1f <- function(d) {
-    unname(c(
-      cl2["k11"] + cl2["k12"] * log(d) + cl2["k13"] * log(d)^2
-      ,cl2["k21"] + cl2["k22"] * log(d) + cl2["k23"] * log(d)^2
-      ,cl2["k31"] + cl2["k32"] * log(d) + cl2["k33"] * log(d)^2
-    ))
-  }
+  log_d <- log(d)
+  log_h <- log(h)
+  log_d2 <- log_d^2
+  log_h2 <- log_h^2
   
-  cl1 <- lapply(d, cl1f)
+  c1 <- coef_matrix[, "k11"] + coef_matrix[, "k12"] * log_d + coef_matrix[, "k13"] * log_d2
+  c2 <- coef_matrix[, "k21"] + coef_matrix[, "k22"] * log_d + coef_matrix[, "k23"] * log_d2
+  c3 <- coef_matrix[, "k31"] + coef_matrix[, "k32"] * log_d + coef_matrix[, "k33"] * log_d2
   
-  formhf <- function(h, coef) {
-    exp(coef[1] + coef[2] * log(h) + coef[3] * log(h)^2)
-  }
-  
-  formh <- mapply(formhf, h, cl1)
+  formh <- exp(c1 + c2 * log_h + c3 * log_h2)
   
   d^2 * pi/40000 * formh
 }

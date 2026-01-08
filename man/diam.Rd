@@ -33,4 +33,3 @@ yield science.
 d <- rnorm(40, mean = 50, sd = 3)
 diam(d)
 }
-

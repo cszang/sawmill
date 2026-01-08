@@ -4,7 +4,7 @@
 \alias{volume}
 \title{Stem volume}
 \usage{
-volume(d, h, species = "fagus_sylvatica")
+volume(d, h, species = "Fagus sylvatica")
 }
 \arguments{
 \item{d}{numeric vector with stem diameters in 1.3 m height in cm}
@@ -29,6 +29,5 @@ which depends on height alone.
 At the moment, only beech and spruce are implemented.
 }
 \examples{
-volume(30:35, 20:25, "fagus_sylvatica")
+volume(30:35, 20:25, "Fagus sylvatica")
 }
-
